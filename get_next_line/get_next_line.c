@@ -128,8 +128,7 @@ char	*ft_strdup(const char *s)
 	}
 	close(fd);
 	return (0);
-}*/
-/*
+}
 Peudocode:
 1. retorn imprime uma linha inteira;
 2. verificar se o fd = 0 e o tamanho o buffer ser z= 0 - return (NULL);
