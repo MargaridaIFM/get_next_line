@@ -22,10 +22,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	// posso verificar aqui se o ficheiro abre ??
 	if (!buffer)
 	{
 		//fprintf(stderr, "Erro: Falha ao alocar memória para o buffer\n");
-		// usar cc , depois ulimit -v 1000 (1KB) ./a.out
+		// usar cc , depois ulimit -v 1000 (1KB) ./a.out ou macro define malloc = NULL
 		return (NULL);
 	}
 	line = fill_the_buffer(fd, storage, buffer);
@@ -63,6 +64,7 @@ static char	*fill_the_buffer(int fd, char *storage, char *buffer)
 		buffer[bytes_buffer] = '\0';
 		if (!storage)
 			storage = ft_strdup("");
+			// adaptar as utils p o receber NULL ?
 		temp_storage = storage;
 		storage = ft_strjoin(temp_storage, buffer);
 		free(temp_storage);
@@ -82,7 +84,7 @@ static char *clean_storage(char *line)
     idx = 0;
 	while(line[idx] != '\0' && line[idx] != '\n')
         idx++;
-	if(line[idx] == '\0' && line[idx] == '\n')
+	if(line[idx] == '\0' || line[idx] == '\n')
 		return(0);
 	len_new_storage = ft_strlen(line) - idx;
     new_storage = ft_substr(line, idx + 1, len_new_storage);

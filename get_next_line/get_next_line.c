@@ -6,31 +6,33 @@ char	*get_line_buffer(char *line);
 char	*get_next_line(int fd)
 {
 	char		*line;
-	char		buffer[BUFFER_SIZE + 1];
-	static char	*storage;
+	static char		buffer[BUFFER_SIZE + 1];
 	int			flag_read;
+	int i = 0;
 
 	if (fd < 0 || fd > FOPEN_MAX || BUFFER_SIZE <= 0)
 		// printf("Buffer size or fd invalid");
 		return (NULL);
 	line = NULL;
 	printf("line antes: %s\n", line);
-	printf("Storage antes: %s\n", storage);
+	printf("Storage antes: %s\n", buffer);
 	flag_read = 1;
 	while (flag_read > 0)
 	{
 		flag_read = read(fd, buffer, BUFFER_SIZE);
 		if (flag_read == -1)
 		{
-			free(storage);
-			return(storage);
+			//free(buffer);
+			return(buffer);
 		}
 		else if(flag_read == 0)
 			break;
 		buffer[flag_read] = '\0';
-		line = ft_strjoin_GNL(storage, buffer);
-		printf("line depois: %s\n", line);
-		printf("Storage depois: %s\n", storage);
+		line = ft_strjoin_GNL(line, buffer);
+		
+		printf("line %d depois: %s\n", i, line);
+		printf("Storage %d depois: %s\n", i ,buffer);
+		i++;
 	}
 	return(line);
 }
