@@ -2,29 +2,39 @@
 
 char	*get_line(int fd, char *buffer, char *stash);
 char	*get_line_buffer(char *line);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strdup(const char *s);
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	char		*buffer;
-	static char	*stash;
+	char		buffer[BUFFER_SIZE + 1];
+	static char	*storage;
+	int			flag_read;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd > FOPEN_MAX || BUFFER_SIZE <= 0)
+		// printf("Buffer size or fd invalid");
 		return (NULL);
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
-		return (NULL);
-	line = get_line(fd, buffer, stash);
-	free(buffer);
-	buffer = NULL;
-	if (!line)
-		return (NULL);
-	stash = get_line_buffer(line);
-	return (line);
+	line = NULL;
+	printf("line antes: %s\n", line);
+	printf("Storage antes: %s\n", storage);
+	flag_read = 1;
+	while (flag_read > 0)
+	{
+		flag_read = read(fd, buffer, BUFFER_SIZE);
+		if (flag_read == -1)
+		{
+			free(storage);
+			return(storage);
+		}
+		else if(flag_read == 0)
+			break;
+		buffer[flag_read] = '\0';
+		line = ft_strjoin_GNL(storage, buffer);
+		printf("line depois: %s\n", line);
+		printf("Storage depois: %s\n", storage);
+	}
+	return(line);
 }
-char	*get_line(int fd, char *buffer, char *stash)
+/* char	*get_line(int fd, char *buffer, char *stash)
 {
 	char	*char_tmp;
 	int		size_bytes;
@@ -73,62 +83,7 @@ char	*get_line_buffer(char *line)
 	new_line[count] = '\0';
 	return (new_line);
 }
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*substr;
-	size_t	size;
 
-	if (!s)
-		return (NULL);
-	if (start >= ft_strlen(s))
-		return (ft_strdup(""));
-	size = ft_strlen(s + start);
-	if (size < len)
-		len = size;
-	substr = malloc((len + 1) * sizeof(char));
-	if (!substr)
-		return (NULL);
-	ft_strlcpy(substr, s + start, len + 1);
-	return (substr);
-}
-char	*ft_strdup(const char *s)
-{
-	char	*dest;
-	int		size_len;
-	int		i;
-
-	size_len = ft_strlen(s) + 1;
-	i = 0;
-	dest = malloc((size_len) * sizeof(char));
-	if (!dest)
-		return (NULL);
-	while (s[i])
-	{
-		dest[i] = s[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-/*int	main(void)
-{
-	int		fd;
-	char	*line;
-
-	fd = open("teste.txt", O_RDONLY);
-	if (fd == -1)
-	{
-		perror("open");
-		return (1);
-	}
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("Linha lida: %s\n", line);
-		free(line);
-	}
-	close(fd);
-	return (0);
-}
 Peudocode:
 1. retorn imprime uma linha inteira;
 2. verificar se o fd = 0 e o tamanho o buffer ser z= 0 - return (NULL);

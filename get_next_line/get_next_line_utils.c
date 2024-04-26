@@ -1,15 +1,80 @@
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_strlen_GNL(char *s)
 {
-	size_t	i;
+	int	idx;
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+	idx = 0;
+	if(!s)
+		return(0);
+	while (s[idx] && s[idx] != '\n')
+		idx++;
+	if(s[idx] == '\n')
+		idx++;
+	return (idx);
 }
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+
+char *ft_strjoin_GNL(char *prefix, char *sufix)
+{
+	char	*str;
+	int 	total_len;
+	int		i;
+	int 	j;
+
+	total_len = ft_strlen_GNL(prefix) + ft_strlen_GNL(sufix) + 1;
+	str = malloc(total_len * sizeof(char));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while(prefix && prefix[i])
+	{  
+		str[i] = prefix[i];
+		i++;
+	}
+	j = 0;
+	while(sufix[j])
+	{ 
+		str[i] = sufix[j];
+		if (sufix[j] == '\n')
+			break;		
+		j++;
+		i++; 
+	}
+	str[i] = '\n';
+	return (str);
+}
+
+/*
+char *ft_strjoin_GNL(char *prefix, char *sufix)
+{
+	char	*str;
+	int 	total_len;
+	int		i;
+	int 	j;
+
+	if (!prefix || !sufix)
+		return (NULL);
+	total_len = ft_strlen_GNL(prefix) + ft_strlen_GNL(sufix) + 1;
+	str = malloc(total_len * sizeof(char));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while(prefix[i])
+	{
+		prefix[i] = str[i];
+		i++;
+	}
+	j = 0;
+	while(sufix[j] && sufix[j++] != '\n')
+	{
+		sufix[j] = str[i];
+		j++;
+		i++; 
+	}
+	str[i] = '\n';
+	return (str);
+}
+size_t	ft_strlcpy(char *dst, const char *src)
 {
 	size_t	idx;
 
@@ -44,33 +109,4 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	}
 	dst[i] = '\0';
 	return (ft_strlen(dst) + ft_strlen(&src[j]));
-}
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*str;
-	size_t	total_len;
-	size_t	len_s1;
-
-	if (!s1 || !s2)
-		return (NULL);
-	len_s1 = ft_strlen(s1);
-	total_len = ft_strlen(s1) + ft_strlen(s2) + 1;
-	str = malloc(total_len * sizeof(char));
-	if (!str)
-		return (NULL);
-	ft_strlcpy(str, s1, len_s1 + 1);
-	ft_strlcat(str, s2, total_len);
-	return (str);
-}
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s)
-	{
-		if (*s == (unsigned char)c)
-			return ((char*)s);
-		s++;
-	}
-	if ((unsigned char)c == '\0')
-		return ((char *)s);
-	return (NULL);
-}
+}*/
