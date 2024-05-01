@@ -1,14 +1,12 @@
 #include "get_next_line.h"
 
-char	*get_line(int fd, char *buffer, char *stash);
-char	*get_line_buffer(char *line);
-
 char	*get_next_line(int fd)
 {
 	char		*line;
 	static char		buffer[BUFFER_SIZE + 1];
 	int			flag_read;
-	int i = 0;
+	
+	//int i = 0;
 
 	if (fd < 0 || fd > FOPEN_MAX || BUFFER_SIZE <= 0)
 		// printf("Buffer size or fd invalid");
@@ -22,19 +20,43 @@ char	*get_next_line(int fd)
 		flag_read = read(fd, buffer, BUFFER_SIZE);
 		if (flag_read == -1)
 		{
-			//free(buffer);
-			return(buffer);
+			free(line);
+			return(NULL);
 		}
 		else if(flag_read == 0)
 			break;
 		buffer[flag_read] = '\0';
 		line = ft_strjoin_GNL(line, buffer);
+		buffer = clean_buffer(buffer);
+
+		//printf("line %d depois: %s\n", i, line);
+		//printf("Storage %d depois: %s\n", i ,buffer);
+		//i++;
 		
-		printf("line %d depois: %s\n", i, line);
-		printf("Storage %d depois: %s\n", i ,buffer);
-		i++;
 	}
 	return(line);
+}
+
+char *clean_buffer(char *buffer)
+{
+    int idx;
+	int j;
+	int i;
+	char *new_buffer;
+
+	i = 0;
+	idx = ft_strlen_GNL(buffer);
+	j = ft_strlen(buffer);
+	new_buffer = malloc((j - idx + 1) * sizeof(char));
+	if(!new_buffer)
+		return (NULL);
+	while(buffer[idx])
+	{
+		new_buffer[i] = buffer[idx];
+		idx++;
+		i++;
+	}
+	return(new_buffer);
 }
 /* char	*get_line(int fd, char *buffer, char *stash)
 {

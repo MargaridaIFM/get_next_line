@@ -14,8 +14,8 @@
 char *get_next_line(int fd);
 
 int	ft_strlen_GNL(char *s);
-//size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-//size_t	ft_strlcat(char *dst, const char *src, size_t size);
 char *ft_strjoin_GNL(char *prefix, char *sufix);
+char *clean_buffer(char *buffer);
+int	ft_strlen(const char *s);
 
 #endif
