@@ -13,17 +13,24 @@ close the file with close											function;
 */
 int	main(void)
 {
-	int		fd;
-	char	*next_line;
+	FILE	*file;
+	char	*line;
 
-	fd = open("test.txt", O_RDONLY);
-    next_line = get_next_line(fd);
-	printf("str: %s", next_line);
-/* 	 while (next_line)
+	// Open the file or use stdin for testing
+	file = fopen("test.txt", "r");
+	if (!file)
 	{
-		printf("str: %s", next_line);
-        next_line = get_next_line(fd);
+		perror("Error opening file");
+		return (1);
 	}
-    close(fd); */
+	// Read lines using your Get Next Line function
+	while ((line = get_next_line(fileno(file))) != NULL)
+	{
+		printf("%s\n", line); // Print the line
+		free(line);           // Free the memory allocated by get_next_line
+	}
+	printf("BUFFER SIZE: %i\n", BUFFER_SIZE);
+	// Close the file
+	fclose(file);
 	return (0);
 }
