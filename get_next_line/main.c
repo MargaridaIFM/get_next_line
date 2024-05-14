@@ -17,7 +17,7 @@ int	main(void)
 	char	*line;
 
 	// Open the file or use stdin for testing
-	file = fopen("test.txt", "r");
+	file = fopen("test1.txt", "r");
 	if (!file)
 	{
 		perror("Error opening file");
